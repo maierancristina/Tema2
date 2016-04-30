@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -13,11 +15,19 @@ namespace TheatreApplication.Controllers
     public class UsrController : Controller
     {
         private UsrDBContext db = new UsrDBContext();
+        private ApplicationDbContext aDb = new ApplicationDbContext();
 
         // GET: Usr
         public ActionResult Index()
         {
-            return View(db.UsersList.ToList());
+            if (ModelState.IsValid && User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+            {
+                return View(db.UsersList.ToList());
+            }
+            else
+            {
+                return RedirectToAction("Login", "Account");
+            }
         }
 
         // GET: Usr/Details/5
@@ -54,10 +64,16 @@ namespace TheatreApplication.Controllers
             {
                 db.UsersList.Add(users);
                 db.SaveChanges();
+                var newUser = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(aDb));
+                newUser.AddToRole("users.ID", "User");
+
                 return RedirectToAction("Index");
             }
+            else
+            {
+                return RedirectToAction("Login", "Account");
+            }
 
-            return View(users);
         }
 
         // GET: Usr/Edit/5
@@ -82,13 +98,16 @@ namespace TheatreApplication.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,Name,Username,Password")] Users users)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && User.Identity.IsAuthenticated && User.IsInRole("Admin"))
             {
                 db.Entry(users).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(users);
+            else
+            {
+                return RedirectToAction("Login", "Account");
+            }
         }
 
         // GET: Usr/Delete/5
@@ -111,10 +130,17 @@ namespace TheatreApplication.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Users users = db.UsersList.Find(id);
-            db.UsersList.Remove(users);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            if (ModelState.IsValid && User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+            {
+                Users users = db.UsersList.Find(id);
+                db.UsersList.Remove(users);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return RedirectToAction("Login", "Account");
+            }
         }
 
         protected override void Dispose(bool disposing)

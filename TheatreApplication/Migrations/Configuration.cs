@@ -45,8 +45,8 @@ namespace TheatreApplication.Migrations
             }
 
             var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
-            UserManager.AddToRole("eebf6e85-f393-4419-9738-6f65814dc6fc", "Admin");
-            UserManager.AddToRole("39934ce3-fd10-4c3a-a71c-ea8a2c5f53d8", "Admin");
+            UserManager.AddToRole("69940465-a9c0-4248-9529-c1de0f8823b3", "Admin");
+            UserManager.AddToRole("89f1ca64-3702-4040-a532-75c584c80ded", "Admin");
 
         }
     }

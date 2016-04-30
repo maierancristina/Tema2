@@ -86,13 +86,17 @@ namespace TheatreApplication.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,Title,ReleaseDate,Directors,Cast,Tickets")] Show show)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && User.Identity.IsAuthenticated && User.IsInRole("Admin"))
             {
                 db.Entry(show).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(show);
+            else
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            //return View(show);
         }
 
         // GET: Shows/Delete/5
@@ -115,10 +119,17 @@ namespace TheatreApplication.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Show show = db.Shows.Find(id);
-            db.Shows.Remove(show);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            if (ModelState.IsValid && User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+            {
+                Show show = db.Shows.Find(id);
+                db.Shows.Remove(show);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return RedirectToAction("Login", "Account");
+            }
         }
 
         protected override void Dispose(bool disposing)
