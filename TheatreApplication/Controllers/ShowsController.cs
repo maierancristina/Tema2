@@ -20,7 +20,12 @@ namespace TheatreApplication.Controllers
         // GET: Shows
         public ActionResult Index()
         {
-            return View(db.Shows.ToList());
+            if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                return View(db.Shows.ToList());
+            else
+            {
+                return RedirectToAction("Login", "Account");
+            }
         }
 
         // GET: Shows/Details/5

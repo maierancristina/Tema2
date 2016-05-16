@@ -173,6 +173,11 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Controllers\Factory\ConcreteCSV.cs" />
+    <Compile Include="Controllers\Factory\ConcreteJSON.cs" />
+    <Compile Include="Controllers\Factory\ConcretExporterFactory.cs" />
+    <Compile Include="Controllers\Factory\Exporter.cs" />
+    <Compile Include="Controllers\Factory\ExporterFactory.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Show.cs" />
